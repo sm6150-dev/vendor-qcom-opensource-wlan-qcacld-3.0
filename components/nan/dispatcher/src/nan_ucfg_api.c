@@ -1111,12 +1111,6 @@ ucfg_nan_is_sta_nan_ndi_4_port_allowed(struct wlan_objmgr_psoc *psoc)
 }
 
 static inline bool
-ucfg_is_nan_enabled(struct nan_psoc_priv_obj *psoc_nan_obj)
-{
-	return psoc_nan_obj->cfg_param.enable;
-}
-
-static inline bool
 ucfg_nan_is_vdev_creation_supp_by_fw(struct nan_psoc_priv_obj *psoc_nan_obj)
 {
 	return psoc_nan_obj->nan_caps.nan_vdev_allowed;
@@ -1186,14 +1180,9 @@ bool ucfg_nan_is_vdev_creation_allowed(struct wlan_objmgr_psoc *psoc)
 		return false;
 	}
 
-	if (!ucfg_is_nan_enabled(psoc_nan_obj)) {
-		nan_debug("NAN is not enabled");
-		return false;
-	}
-
 	host_support = ucfg_nan_is_vdev_creation_supp_by_host(psoc_nan_obj);
 	fw_support = ucfg_nan_is_vdev_creation_supp_by_fw(psoc_nan_obj);
-	if (!host_support || !fw_support) {
+	if (!host_support && !fw_support) {
 		nan_debug("NAN separate vdev%s supported by host,%s supported by firmware",
 			  host_support ? "" : " not", fw_support ? "" : " not");
 		return false;
